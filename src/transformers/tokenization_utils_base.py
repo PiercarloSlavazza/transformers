@@ -1975,8 +1975,9 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
                         f"Should have index {len(tokenizer)} but has index {index} in saved vocabulary."
                     )
 
-                # Safe to call on a tokenizer fast even if token already there.
-                tokenizer.add_tokens(token, special_tokens=bool(token in special_tokens))
+            # Safe to call on a tokenizer fast even if token already there.
+            tokenizer.add_tokens([indexed_token[0] for indexed_token in added_tok_encoder_sorted if indexed_token[0] in special_tokens], special_tokens=True)
+            tokenizer.add_tokens([indexed_token[0] for indexed_token in added_tok_encoder_sorted if indexed_token[0] not in special_tokens], special_tokens=False)
 
         # Check all our special tokens are registered as "no split" token (we don't cut them) and are in the vocab
         added_tokens = tokenizer.sanitize_special_tokens()
